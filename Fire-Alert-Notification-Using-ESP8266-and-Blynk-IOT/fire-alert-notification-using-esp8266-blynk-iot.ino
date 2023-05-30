@@ -20,7 +20,7 @@ void sendSensor(){
    int isButtonPressed = digitalRead(D1);
   if (isButtonPressed==0 && flag==0) {
     Serial.println("Fire in the House");  
-    Blynk.email("testemail@gmail.com", "Alert", "Fire Detected!");
+    //Blynk.email("testemail@gmail.com", "Alert", "Fire Detected!");
     Blynk.logEvent("fire_alert","Fire Detected");
     
     flag=1;
