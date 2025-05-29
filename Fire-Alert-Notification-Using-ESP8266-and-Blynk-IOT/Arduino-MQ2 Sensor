@@ -1,0 +1,55 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);  // Alamat I2C umum: 0x27
+
+const int mq2Pin = A0;
+const int ledPin = 8;
+const int buzzerPin = 9;
+int threshold = 400;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  lcd.begin();
+  lcd.backlight();
+
+  lcd.setCursor(0, 0);
+  lcd.print("Sistem Siaga...");
+  delay(2000);
+  lcd.clear();
+}
+
+void sirenTone() {
+  tone(buzzerPin, 1000);
+  delay(300);
+  tone(buzzerPin, 1500);
+  delay(300);
+  noTone(buzzerPin);
+}
+
+void loop() {
+  int gasValue = analogRead(mq2Pin);
+  
+  lcd.setCursor(0, 0);
+  lcd.print("Asap: ");
+  lcd.print(gasValue);
+  lcd.print("   ");
+
+  if (gasValue > threshold) {
+    lcd.setCursor(0, 1);
+    lcd.print("Bahaya! Api!!!  ");
+    digitalWrite(ledPin, HIGH);
+    sirenTone();
+    digitalWrite(ledPin, LOW);
+    delay(300);
+  } else {
+    lcd.setCursor(0, 1);
+    lcd.print("Status: Aman    ");
+    noTone(buzzerPin);
+    digitalWrite(ledPin, LOW);
+    delay(300);
+  }
+
+  delay(200);
+}
